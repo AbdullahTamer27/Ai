@@ -1,19 +1,28 @@
-import pieceUpdated
-
+from pieceGUI import Piece
 class Board:
     def __init__(self):
-        self.placement_on_board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
-        piece_sizes = [20, 40, 60, 80]
-        # Create White then Black From small to big
-        self.whitePieces = []
-        self.blackPieces = []
-        for i in range(3):
-            for size in piece_sizes: 
-                white = pieceUpdated.White(size)
-                self.whitePieces.append(white)
-                black = pieceUpdated.Black(size)
-                self.blackPieces.append(black)
+        #self.placement_on_board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+        self.placement_on_board = [[[],[],[],[]],[[],[],[],[]],[[],[],[],[]],[[],[],[],[]]]
         
-    def checkList(self):
-        print(self.whitePieces)
+    def updatePlacement(self, row, col, piece):
+        # piece: going to play
+        onBoard_piece = self.placement_on_board[row][col]
+        if onBoard_piece: #there is already onBoard_piece
+            if onBoard_piece[-1].size >= piece.size:
+                print("onboard size: " ,onBoard_piece[-1].size, "piece size: " ,piece.size )
+                print("Too small")
+                return False
         
+        onBoard_piece.append(piece)
+        piece.setPos((row,col))
+        
+            # piece.appendUnder(onBoard_piece)
+            # onBoard_piece.appendAbove(piece)
+        # self.placement_on_board[row][col] = piece
+        # piece.setPos((row,col))
+        
+    
+    def printBoard(self):
+        return self.placement_on_board
+    
+    

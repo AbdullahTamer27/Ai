@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
-from pieceGUI import Piece
+from pieceGUI import Piece, White, Black
+from Board import Board
 # Game state variables
 # Constants for game states
 MENU = 0
@@ -48,18 +49,21 @@ x_initial_l = 100
 y_initial = 200
 white_pieces = pygame.sprite.Group()
 black_pieces = pygame.sprite.Group()
+board = Board()
 for size in piece_sizes:
     for i in range(3):
-        left = Piece((253, 187, 161), size, x_initial_l, y_initial)
-        right = Piece((112, 57, 127), size, x_initial_r, y_initial)
+        left = White((253, 187, 161), size, x_initial_l, y_initial)
+        right = Black((112, 57, 127), size, x_initial_r, y_initial)
         white_pieces.add(left)
         black_pieces.add(right)
         y_initial += 130
     y_initial = 200
 
 selected_piece = None
+old_position = None
 dragging = False
 Playerturn = True
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -103,15 +107,19 @@ while True:
                         if distance < min_distance and placement_on_board[row][col] == (0,0):
                             min_distance = distance
                             closest_position = (row, col)
+                            
                 if closest_position is not None:
                     row, col = closest_position
                     if selected_piece is not None:
+                        if board.updatePlacement(row, col, selected_piece) == False:
+                            selected_piece.rect.center = selected_piece.oldPosition
+                            continue
                         selected_piece.rect.center = coordinates_on_board[row][col]
+                        selected_piece.setOldPosition(coordinates_on_board[row][col])
+                    
                         Playerturn = not Playerturn
-                        print(row,col)
-                      
+               
                      
-
                 selected_piece = None
 
     if dragging and selected_piece:
