@@ -11,4 +11,3 @@ class Piece(pygame.sprite.Sprite) :
 
 
     
-

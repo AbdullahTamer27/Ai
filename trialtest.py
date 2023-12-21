@@ -1,6 +1,8 @@
 import pygame
+import Board
+import pieceUpdated
 from sys import exit
-from piece import Piece
+
 
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
@@ -18,16 +20,8 @@ text_surface = test_font.render('Gobblet', False, (23, 2, 24))
 text_rec = text_surface.get_rect(center=(400, 100))
 
 
-piece_sizes = [40,55,70,80]
+piece_sizes = [20,40,60,80]
 
-
-#make pieces on board array of tuples
-placement_on_board = [
-    [(0,0),(0,0),(0,0),(0,0)],#
-    [(0,0),(0,0),(0,0),(0,0)],
-    [(0,0),(0,0),(0,0),(0,0)],
-    [(0,0),(0,0),(0,0),(0,0)]
-]
 coordinates_on_board = [
     [(260,200),(355,200),(445,200),(540,200)],
     [(260,300),(355,300),(445,300),(540,300)],
@@ -35,18 +29,24 @@ coordinates_on_board = [
     [(260,500),(355,500),(445,500),(540,500)]
 ]
 
+brd = Board.Board()
+
 x_initial_r = 700
 x_initial_l = 100
 y_initial = 200
 all_pieces = pygame.sprite.Group()
+for piece in brd.whitePieces:
+    all_pieces.add(piece)
+for piece in brd.blackPieces:
+    all_pieces.add(piece)
 
-for i in range(3):
-    for size in piece_sizes:
-        left = Piece((253, 187, 161), size, x_initial_l, y_initial)
-        right = Piece((112, 57, 127), size, x_initial_r, y_initial)
-        all_pieces.add(right)
-        all_pieces.add(left)
-    y_initial += 130
+# for i in range(3):
+#     for size in piece_sizes:
+#         left = Piece((253, 187, 161), size, x_initial_l, y_initial)
+#         right = Piece((112, 57, 127), size, x_initial_r, y_initial)
+#         all_pieces.add(right)
+#         all_pieces.add(left)
+#     y_initial += 130
 
 selected_piece = None
 dragging = False
@@ -71,7 +71,7 @@ while True:
                 for row, positions in enumerate(coordinates_on_board):
                     for col, pos in enumerate(positions):
                         distance = pygame.math.Vector2(pos).distance_to(pygame.math.Vector2(pygame.mouse.get_pos()))
-                        if distance < min_distance and placement_on_board[row][col] == (0,0):
+                        if distance < min_distance:
                             min_distance = distance
                             closest_position = (row, col)
                 if closest_position is not None:
