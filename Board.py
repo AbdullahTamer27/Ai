@@ -13,6 +13,10 @@ class Board:
                 print("Too small")
                 return False
         
+        if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
+            self.placement_on_board[piece.pos[0]][piece.pos[1]].pop()
+        
+        
         onBoard_piece.append(piece)
         piece.setPos((row,col))
         
