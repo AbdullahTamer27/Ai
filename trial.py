@@ -1,6 +1,14 @@
 import pygame
 from sys import exit
-from piece import Piece
+from pieceGUI import Piece
+# Game state variables
+# Constants for game states
+MENU = 0
+GAME = 1
+
+game_state = MENU
+game_mode = None
+difficulty = None
 
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
@@ -18,7 +26,7 @@ text_surface = test_font.render('Gobblet', False, (23, 2, 24))
 text_rec = text_surface.get_rect(center=(400, 100))
 
 
-piece_sizes = [40,55,70,80]
+piece_sizes = [20,40,60,80]
 
 
 #make pieces on board array of tuples
@@ -38,31 +46,52 @@ coordinates_on_board = [
 x_initial_r = 700
 x_initial_l = 100
 y_initial = 200
-all_pieces = pygame.sprite.Group()
-
-for i in range(3):
-    for size in piece_sizes:
+white_pieces = pygame.sprite.Group()
+black_pieces = pygame.sprite.Group()
+for size in piece_sizes:
+    for i in range(3):
         left = Piece((253, 187, 161), size, x_initial_l, y_initial)
         right = Piece((112, 57, 127), size, x_initial_r, y_initial)
-        all_pieces.add(right)
-        all_pieces.add(left)
-    y_initial += 130
+        white_pieces.add(left)
+        black_pieces.add(right)
+        y_initial += 130
+    y_initial = 200
 
 selected_piece = None
 dragging = False
-
 while True:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # Left mouse button
-                for piece in all_pieces:
+            if event.button == 1 :  # Left mouse button and its player 1s turn
+                for piece in white_pieces:
                     if piece.rect.collidepoint(event.pos):
                         selected_piece = piece
                         dragging = True
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1  :  # Left mouse button and its player 2s turn
+                for piece in black_pieces:
+                    if piece.rect.collidepoint(event.pos):
+                        selected_piece = piece
+                        dragging = True
+       
+        elif game_state == MENU:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    game_mode = "Player vs Player"
+                    game_state = GAME
+                elif event.key == pygame.K_2:
+                    game_mode = "Player vs AI(easy)"
+                    game_state = GAME
+                elif event.key == pygame.K_3:
+                    game_mode = "Player vs AI(hard)"
+                    game_state = GAME    
+                elif event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    exit()
+    
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
                 dragging = False
@@ -79,6 +108,8 @@ while True:
                     if selected_piece is not None:
                         selected_piece.rect.center = coordinates_on_board[row][col]
                         print(row,col)
+                        playerturn =  playerturn2
+                        print(playerturn)
 
                 selected_piece = None
 
@@ -95,8 +126,23 @@ while True:
         pygame.draw.line(screen, current_color, (0, y), (800, y))
 
     screen.blit(background, background_rec)
-    all_pieces.draw(screen)
+    white_pieces.draw(screen)
+    black_pieces.draw(screen)
     screen.blit(text_surface, text_rec)
+
+    if game_state == MENU:
+        # Draw menu text
+        screen.fill((255, 255, 255))
+        menu_font = pygame.font.Font(None, 36)
+        menu_text1 = menu_font.render("press 1 - Player vs Player", True, (0, 0, 0))
+        menu_text2 = menu_font.render("press 2 - Player vs AI(easy)", True, (0, 0, 0))
+        menu_text3 = menu_font.render("press 3 - Player vs AI(Hard)", True, (0, 0, 0))
+        menu_text4 = menu_font.render("Press ESC to exit", True, (0, 0, 0))
+        screen.blit(menu_text1, (300, 300))
+        screen.blit(menu_text2, (300, 340))
+        screen.blit(menu_text3, (300, 380))
+        screen.blit(menu_text4, (300, 420))
+
 
     pygame.display.update()
     clock.tick(60)

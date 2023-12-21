@@ -35,10 +35,23 @@ x_initial_r = 700
 x_initial_l = 100
 y_initial = 200
 all_pieces = pygame.sprite.Group()
-for piece in brd.whitePieces:
-    all_pieces.add(piece)
-for piece in brd.blackPieces:
-    all_pieces.add(piece)
+
+quarter_length = 0
+j=0
+for i in range(3):
+    quarter_length += len(brd.whitePieces)//3
+    for i in range(j,quarter_length):
+        piece = brd.whitePieces
+        GUI = piece[i].createSprite((253, 187, 161), x_initial_l, y_initial)
+        all_pieces.add(GUI)
+
+    for i in range(j,quarter_length):
+        piece = brd.blackPieces
+        GUI = piece[i].createSprite((112, 57, 127), x_initial_r, y_initial)
+        all_pieces.add(GUI)
+    y_initial += 130
+    j += 4
+  
 
 # for i in range(3):
 #     for size in piece_sizes:
@@ -62,6 +75,7 @@ while True:
                 for piece in all_pieces:
                     if piece.rect.collidepoint(event.pos):
                         selected_piece = piece
+                        print(selected_piece)
                         dragging = True
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
@@ -79,6 +93,7 @@ while True:
                     if selected_piece is not None:
                         selected_piece.rect.center = coordinates_on_board[row][col]
                         print(row,col)
+                        print()
 
                 selected_piece = None
 

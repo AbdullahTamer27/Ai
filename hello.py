@@ -1,5 +1,5 @@
 import pygame
-from piece import Piece
+from pieceGUI import Piece
 
 # pygame setup
 pygame.init()
