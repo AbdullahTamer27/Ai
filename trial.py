@@ -59,24 +59,24 @@ for size in piece_sizes:
 
 selected_piece = None
 dragging = False
+Playerturn = True
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1 :  # Left mouse button and its player 1s turn
+            if event.button == 1 and  Playerturn:  # Left mouse button and its player 1s turn
                 for piece in white_pieces:
                     if piece.rect.collidepoint(event.pos):
                         selected_piece = piece
                         dragging = True
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1  :  # Left mouse button and its player 2s turn
+            elif event.button == 1 and not Playerturn:
                 for piece in black_pieces:
                     if piece.rect.collidepoint(event.pos):
                         selected_piece = piece
                         dragging = True
-       
+
         elif game_state == MENU:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
@@ -107,9 +107,10 @@ while True:
                     row, col = closest_position
                     if selected_piece is not None:
                         selected_piece.rect.center = coordinates_on_board[row][col]
+                        Playerturn = not Playerturn
                         print(row,col)
-                        playerturn =  playerturn2
-                        print(playerturn)
+                      
+                     
 
                 selected_piece = None
 
@@ -126,8 +127,8 @@ while True:
         pygame.draw.line(screen, current_color, (0, y), (800, y))
 
     screen.blit(background, background_rec)
-    white_pieces.draw(screen)
     black_pieces.draw(screen)
+    white_pieces.draw(screen)
     screen.blit(text_surface, text_rec)
 
     if game_state == MENU:
