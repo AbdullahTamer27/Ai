@@ -30,13 +30,6 @@ text_rec = text_surface.get_rect(center=(400, 100))
 piece_sizes = [20,40,60,80]
 
 
-#make pieces on board array of tuples
-placement_on_board = [
-    [(0,0),(0,0),(0,0),(0,0)],#
-    [(0,0),(0,0),(0,0),(0,0)],
-    [(0,0),(0,0),(0,0),(0,0)],
-    [(0,0),(0,0),(0,0),(0,0)]
-]
 coordinates_on_board = [
     [(260,200),(355,200),(445,200),(540,200)],
     [(260,300),(355,300),(445,300),(540,300)],
@@ -47,8 +40,11 @@ coordinates_on_board = [
 x_initial_r = 700
 x_initial_l = 100
 y_initial = 200
+
+
 white_pieces = pygame.sprite.Group()
 black_pieces = pygame.sprite.Group()
+all_pieces = pygame.sprite.Group()
 board = Board()
 for size in piece_sizes:
     for i in range(3):
@@ -56,6 +52,8 @@ for size in piece_sizes:
         right = Black((112, 57, 127), size, x_initial_r, y_initial)
         white_pieces.add(left)
         black_pieces.add(right)
+        all_pieces.add(left)
+        all_pieces.add(right)
         y_initial += 130
     y_initial = 200
 
@@ -104,7 +102,7 @@ while True:
                 for row, positions in enumerate(coordinates_on_board):
                     for col, pos in enumerate(positions):
                         distance = pygame.math.Vector2(pos).distance_to(pygame.math.Vector2(pygame.mouse.get_pos()))
-                        if distance < min_distance and placement_on_board[row][col] == (0,0):
+                        if distance < min_distance :
                             min_distance = distance
                             closest_position = (row, col)
                             
@@ -135,8 +133,7 @@ while True:
         pygame.draw.line(screen, current_color, (0, y), (800, y))
 
     screen.blit(background, background_rec)
-    black_pieces.draw(screen)
-    white_pieces.draw(screen)
+    all_pieces.draw(screen)
     screen.blit(text_surface, text_rec)
 
     if game_state == MENU:
