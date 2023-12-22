@@ -114,7 +114,8 @@ while True:
                             continue
                         selected_piece.rect.center = coordinates_on_board[row][col]
                         selected_piece.setOldPosition(coordinates_on_board[row][col])
-                    
+                        board.checkWin()
+                        
                         Playerturn = not Playerturn
                
                      
