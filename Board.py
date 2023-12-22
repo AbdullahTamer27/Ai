@@ -51,7 +51,7 @@ class Board:
                     except IndexError as e:
                         pass
                     
-                if countRow != 3 or countCol != 3 or countDiagonalR != 3 or countDiagonalL != 3:
+                if countRow != 3 and countCol != 3 and countDiagonalR != 3 and countDiagonalL != 3:
                     print("Illegal Move: must be 3 in row or column or diagonal to eat from outside")
                     return False
                
