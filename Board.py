@@ -3,7 +3,7 @@ class Board:
     def __init__(self):
         #self.placement_on_board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
         self.placement_on_board = [[[],[],[],[]],[[],[],[],[]],[[],[],[],[]],[[],[],[],[]]]
-        
+
     def updatePlacement(self, row, col, piece):
         # piece: going to play
         # Piece is going to eat another piece
@@ -51,7 +51,7 @@ class Board:
                     except IndexError as e:
                         pass
                     
-                if countRow != 3 and countCol != 3 and countDiagonalR != 3 and countDiagonalL != 3:
+                if countRow != 3 or countCol != 3 and countDiagonalR != 3 and countDiagonalL != 3:
                     print("Illegal Move: must be 3 in row or column or diagonal to eat from outside")
                     return False
                
@@ -66,14 +66,17 @@ class Board:
         onBoard_piece.append(piece)
         piece.setPos((row,col))
         
+    
     def checkWin(self):
         # Check if win by row
         for row in self.placement_on_board:
             try:
                 if all(isinstance(stack[-1],White) for stack in row):
                     print("White Row wins")
+                    return True,"White Row wins"
                 elif all(isinstance(stack[-1],Black) for stack in row):
-                    print("Black Row wins")  
+                    print("Black Row wins") 
+                    return True ,"Black Row wins"
             except IndexError as e:
             # Handle IndexError (list index out of range)
                 continue
@@ -82,8 +85,10 @@ class Board:
             try:
                 if all(isinstance(row[col][-1],White) for row in self.placement_on_board): #row[col][top stack]
                     print("White Column wins")
+                    return True,"White Column wins"
                 elif all(isinstance(row[col][-1],Black)for row in self.placement_on_board):
                     print("Black Column wins") 
+                    return True,"Black Column wins"
             except IndexError as e:
             # Handle IndexError (list index out of range)
                 continue
@@ -91,8 +96,10 @@ class Board:
         try:
             if all(isinstance(self.placement_on_board[i][i][-1], White) for i in range(len(self.placement_on_board))):
                 print("White Diagonal wins")
+                return True,"White Diagonal wins"
             elif all(isinstance(self.placement_on_board[i][i][-1], Black) for i in range(len(self.placement_on_board))):
                 print("Black Diagonal wins") 
+                return True,"Black Diagonal wins"
         except IndexError as e:
             # Handle IndexError (list index out of range)
                 pass
@@ -100,14 +107,19 @@ class Board:
         try:
             if all(isinstance(self.placement_on_board[i][len(self.placement_on_board) - 1 - i][-1],White) for i in range(len(self.placement_on_board))):
                 print("White Diagonal wins")
+                return True,"White Diagonal wins"
             elif all(isinstance(self.placement_on_board[i][len(self.placement_on_board) - 1 - i][-1], Black) for i in range(len(self.placement_on_board))):
                 print("Black Diagonal wins") 
+                return True,"Black Diagonal wins"
         except IndexError as e:
             pass
+        return False,""
                   
         
     
     def printBoard(self):
         return self.placement_on_board
     
+    def reset_board(self):
+        self.placement_on_board =  [[[], [], [], []], [[], [], [], []], [[], [], [], []], [[], [], [], []]]
     
