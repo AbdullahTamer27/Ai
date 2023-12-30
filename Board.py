@@ -1,9 +1,11 @@
 from pieceGUI import Piece, White,Black
+import copy
 class Board:
     def __init__(self):
         #self.placement_on_board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
         self.placement_on_board = [[[],[],[],[]],[[],[],[],[]],[[],[],[],[]],[[],[],[],[]]]
-
+        self.whitePieces = []
+        self.blackPieces = []
     # def valid_movies(self):
     #     valid_movies = []
     #     for row in self.placement_on_board:
@@ -186,6 +188,7 @@ class Board:
         # Add Piece to stack
         onBoard_piece.append(piece)
         piece.setPos((row,col))
+
         
     
     def checkWin(self):
@@ -243,4 +246,4 @@ class Board:
     
     def reset_board(self):
         self.placement_on_board =  [[[], [], [], []], [[], [], [], []], [[], [], [], []], [[], [], [], []]]
-    
+

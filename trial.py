@@ -1,10 +1,36 @@
 import pygame
 from sys import exit
+
+import pieceGUI
+from MINMAX.AI import AI
 from pieceGUI import Piece, White, Black
 from Board import Board
+
 # Game state variables
 # Constants for game states
 
+# def can_place_piece(board, row, col, piece):
+#     onBoard_piece = board.placement_on_board[row][col]
+#     if onBoard_piece[-1].size >= piece.size:
+#         print("onboard size: ", onBoard_piece[-1].size, "piece size: ", piece.size)
+#         print("Too small")
+#         return False
+#     return True
+#
+# def all_moves(board, piece):
+#     moves = []
+#     for row in range(len(board)):
+#         for col in range(len(board[row])):
+#             if can_place_piece(board, row, col, piece):
+#                 # Assuming you have a function to clone the board state
+#                 new_board = clone_board(board)
+#                 place_piece(new_board, row, col, piece)
+#                 moves.append(new_board)
+#             if can_gobble(board, row, col, piece):
+#                 # Consider all gobble moves
+#                 for new_board in generate_gobble_moves(board, row, col, piece):
+#                     moves.append(new_board)
+#     return moves
 MENU = 0
 GAME = 1
 
@@ -48,6 +74,7 @@ white_pieces = pygame.sprite.Group()
 black_pieces = pygame.sprite.Group()
 all_pieces = pygame.sprite.Group()
 board = Board()
+AI = AI(board)
 def reset_positions():
     x_initial_r = 700
     x_initial_l = 100
@@ -58,6 +85,8 @@ def reset_positions():
             right = Black((112, 57, 127), size, x_initial_r, y_initial)
             white_pieces.add(left)
             black_pieces.add(right)
+            board.whitePieces.append(left)
+            board.blackPieces.append(right)
             all_pieces.add(left)
             all_pieces.add(right)
             y_initial += 130
@@ -125,6 +154,7 @@ while True:
                         game_over,winner = board.checkWin()
                         
                         Playerturn = not Playerturn
+
                
                      
                 selected_piece = None
@@ -199,3 +229,4 @@ while True:
     pygame.display.update()
 
     clock.tick(60)
+
