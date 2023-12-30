@@ -6,15 +6,15 @@ class Board:
         self.placement_on_board = [[[],[],[],[]],[[],[],[],[]],[[],[],[],[]],[[],[],[],[]]]
         self.whitePieces = []
         self.blackPieces = []
-    # def valid_movies(self):
-    #     valid_movies = []
-    #     for row in self.placement_on_board:
-    #         for col in self.placement_on_board[row]:
-    #             if self.placement_on_board[row][col] == 0 :
-    #                 valid_movies.append(self.placement_on_board[row][col])
-    #     print(valid_movies)
+        self.firstW = []
+        self.firstB = []
+        self.secondW = []
+        self.secondB = []
+        self.thirdW = []
+        self.thirdB = []
 
-#
+
+
     def evaluate (self , piece ):
         White_score = 0
         Black_score = 0
@@ -127,15 +127,13 @@ class Board:
             print("Black -->", Black_score)
 
 
-    def updatePlacement(self, row, col, piece):
+    def simulatePlacement(self, row, col, piece):
         # piece: going to play
         # Piece is going to eat another piece
         onBoard_piece = self.placement_on_board[row][col]
         if onBoard_piece: 
             # OnBoard Pice is Big
             if onBoard_piece[-1].size >= piece.size:
-                print("onboard size: " ,onBoard_piece[-1].size, "piece size: " ,piece.size )
-                print("Too small")
                 return False
             # OnBoard Piece not big
             # Check illegal move: Eating from outside, and not 3 consequitive
@@ -175,19 +173,9 @@ class Board:
                         pass
                     
                 if countRow != 3 and countCol != 3 and countDiagonalR != 3 and countDiagonalL != 3:
-                    print("Illegal Move: must be 3 in row or column or diagonal to eat from outside")
                     return False
-               
-                print(".")
-                
-        
-        # Remove Piece from stackk
-        if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
-            self.placement_on_board[piece.pos[0]][piece.pos[1]].pop()
-        
-        # Add Piece to stack
-        onBoard_piece.append(piece)
-        piece.setPos((row,col))
+            
+        return True
 
         
     
@@ -247,3 +235,106 @@ class Board:
     def reset_board(self):
         self.placement_on_board =  [[[], [], [], []], [[], [], [], []], [[], [], [], []], [[], [], [], []]]
 
+
+    def updatePlacement(self, row, col, piece):
+        # piece: going to play
+        # Piece is going to eat another piece
+        onBoard_piece = self.placement_on_board[row][col]
+        if onBoard_piece: 
+            # OnBoard Pice is Big
+            if onBoard_piece[-1].size >= piece.size:
+                print("onboard size: " ,onBoard_piece[-1].size, "piece size: " ,piece.size )
+                print("Too small")
+                return False
+            # OnBoard Piece not big
+            # Check illegal move: Eating from outside, and not 3 consequitive
+            elif piece.pos == (-1,-1): # piece from outside
+                countRow = 0 
+                countCol = 0
+                countDiagonalL = 0
+                countDiagonalR = 0
+                # check legal row
+                for i in range(4):
+                    try:
+                        if type(self.placement_on_board[row][i][-1]) == type(onBoard_piece[-1]):
+                            countRow += 1
+                    except IndexError as e:
+                        # Handle IndexError (list index out of range)
+                        pass
+                # check legal column
+                for i in range(4):
+                    try:
+                        if type(self.placement_on_board[i][col][-1]) == type(onBoard_piece[-1]):
+                            countCol += 1
+                    except IndexError as e:
+                        pass
+                # check legal diagonal left to right
+                for i in range(4):
+                    try:
+                        if type(self.placement_on_board[i][i][-1]) == type(onBoard_piece[-1]):
+                            countDiagonalL += 1
+                    except IndexError as e:
+                        pass
+                # check legal diagonal right to left
+                for i in range(4):
+                    try:
+                        if type(self.placement_on_board[i][3-i][-1]) == type(onBoard_piece[-1]):
+                            countDiagonalR += 1
+                    except IndexError as e:
+                        pass
+                    
+                if countRow != 3 and countCol != 3 and countDiagonalR != 3 and countDiagonalL != 3:
+                    print("Illegal Move: must be 3 in row or column or diagonal to eat from outside")
+                    return False
+            
+            
+        if piece.pos == (-1,-1):
+            print("entered -1, -1 if")
+            try:
+                if piece in self.firstW:
+                    self.firstW.pop()
+                    print(self.firstW)
+                    self.firstW[-1].isMovable = True
+                elif piece in self.secondW:
+                    self.secondW.pop()
+                    print(self.secondW)
+                    self.secondW[-1].isMovable = True
+                elif piece in self.thirdW:
+                    self.thirdW.pop()
+                    print(self.thirdW)
+                    self.thirdW[-1].isMovable = True
+                elif piece in self.firstB:
+                    self.firstB.pop()
+                    print(self.firstB)
+                    self.firstB[-1].isMovable = True
+                elif piece in self.secondB:
+                    self.secondB.pop()
+                    print(self.secondB)
+                    self.secondB[-1].isMovable = True
+                elif piece in self.thirdB:
+                    self.thirdB.pop()
+                    print(self.thirdB)
+                    self.thirdB[-1].isMovable = True
+            except IndexError as e:
+                print("error", piece.idx)
+                pass
+        
+        # Remove Piece from stackk
+        if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
+            self.placement_on_board[piece.pos[0]][piece.pos[1]].pop()
+            if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
+                try:
+                    self.placement_on_board[piece.pos[0]][piece.pos[1]][-1].isMovable = True
+                except IndexError as e:
+                    print("error in setting ", piece.idx)
+                    pass
+        
+        # Add Piece to stack
+        try:
+            onBoard_piece.append(piece)
+            if onBoard_piece[-2]:
+                onBoard_piece[-2].isMovable = False
+        except IndexError:
+            pass
+            
+        piece.setPos((row,col))

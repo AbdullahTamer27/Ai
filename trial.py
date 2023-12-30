@@ -1,9 +1,7 @@
 import pygame
 from sys import exit
-
-import pieceGUI
 from MINMAX.AI import AI
-from pieceGUI import Piece, White, Black
+from pieceGUI import White, Black
 from Board import Board
 
 # Game state variables
@@ -91,7 +89,25 @@ def reset_positions():
             all_pieces.add(right)
             y_initial += 130
         y_initial = 200
+    # 1234
+    # 1 1 1             1 1 1 2 2 2 3 3 3 4 4 4
+    # 2 2 2             first stack indexs: 0 3 6 9
+    # 3 3 3             second stack    :   1 4 7 10
+    # 4 4 4             third stack :       2 5 8 11
+
+#white_pieces.sprites()[9].under = [white_pieces.sprites()[0], white_pieces.sprites()[3], white_pieces.sprites()[6]]
+
 reset_positions()
+
+board.firstW = [white_pieces.sprites()[0], white_pieces.sprites()[3], white_pieces.sprites()[6], white_pieces.sprites()[9]]
+board.secondW = [white_pieces.sprites()[1], white_pieces.sprites()[4], white_pieces.sprites()[7], white_pieces.sprites()[10]]
+board.thirdW = [white_pieces.sprites()[2], white_pieces.sprites()[5], white_pieces.sprites()[8], white_pieces.sprites()[11]]
+
+board.firstB =[black_pieces.sprites()[0], black_pieces.sprites()[3], black_pieces.sprites()[6], black_pieces.sprites()[9]] 
+board.secondB =[black_pieces.sprites()[1], black_pieces.sprites()[4], black_pieces.sprites()[7], black_pieces.sprites()[10]] 
+board.thirdB =[black_pieces.sprites()[2], black_pieces.sprites()[5], black_pieces.sprites()[8], black_pieces.sprites()[11]]
+
+print(board.firstW)
 selected_piece = None
 old_position = None
 dragging = False
@@ -154,9 +170,12 @@ while True:
                         game_over,winner = board.checkWin()
                         
                         Playerturn = not Playerturn
+                        AI.temp(Playerturn)
+                        # for piece in all_pieces:
+                        #     print(piece.idx, piece.isMovable)
+                        # print(".")
 
-               
-                     
+                
                 selected_piece = None
 
     if dragging and selected_piece:

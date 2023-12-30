@@ -7,7 +7,8 @@ class Piece(pygame.sprite.Sprite) :
         self.image = pygame.Surface((size, size), pygame.SRCALPHA)
         pygame.draw.circle(self.image, color, (size // 2, size // 2), size // 2)
         self.rect = self.image.get_rect(center=(x, y))
-        
+        self.x = x
+        self.y = y
         self.oldPosition = (x,y)
         self.idx = Piece.id +1
         Piece.id = Piece.id +1
@@ -15,6 +16,10 @@ class Piece(pygame.sprite.Sprite) :
         self.under = [] # list of Pieces under
         self.pos = (-1,-1) # Position of Piece on Board
         self.size = size
+        self.isMovable = False
+        
+        if self.size == 80:
+            self.isMovable = True
         
     def appendUnder(self,under):
         self.under.append(under)

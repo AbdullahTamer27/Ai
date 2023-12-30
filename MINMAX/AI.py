@@ -4,26 +4,36 @@ class AI:
     def __init__(self, board):
         # self.placement_on_board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
         self.board = board
-    def all_moves(self, player):
+    def all_moves(self, piece):
+        #print(piece.idx, piece.size)
+        
+        # playerturn = true then white turn
+        # playerturn = false then black turn
         moves = []
         for row in range(4):
             for col in range(4):
-                # Get the top piece on the current stack
-                top_piece = self.board.placement_on_board[row][col][-1] if self.board.placement_on_board[row][col] else None
-
-                # Generate all possible moves for 'player' from (row, col)
-                if not top_piece or isinstance(top_piece, type(player)):  # Check if the current player can move here
-                    for piece in self.get_player_pieces(player):
-                        if self.can_move(piece, row, col):  # Ensure the move is legal
-                            new_board = self.clone_board()  # Create a new board state
-                            new_board.updatePlacement(row, col, piece)
-                            moves.append(new_board)  # Add the new board state to moves list
-                        for move in moves:
-                            print(move.placement_on_board)
-                        print('---------------------------------------------')
-
-
+                if self.can_move(piece, row, col):  # Ensure the move is legal
+                    new_board = self.clone_board()  # Create a new board state
+                    test = new_board.simulatePlacement(row, col, piece)
+                    if test:
+                        new_board.placement_on_board[row][col].append(piece)
+                    moves.append(new_board)  # Add the new board state to moves list
+        for move in moves:
+            for row in move.placement_on_board:
+                print(row)
+            print('.')
+        print('---------------------------------------------')
         return moves
+    
+    def temp(self, playerturn):
+        if playerturn: 
+            for whitePiece in self.board.whitePieces:
+                if whitePiece.isMovable:
+                    self.all_moves(whitePiece)
+        elif not playerturn:
+            for blackPiece in self.board.blackPieces:
+                if blackPiece.isMovable:
+                    self.all_moves(blackPiece)
 
     def get_player_pieces(self, pieces):
         # Return a list of all pieces belonging to 'player' that can be moved.
@@ -88,11 +98,19 @@ class AI:
         # This ensures you don't alter the original board while simulating moves.
         # Create a new instance of Board
         res = Board()
-        res.placement_on_board = []
         for whitePiece in self.board.whitePieces:
-            res.whitePieces.append(whitePiece)
+            newWhite = White((253, 187, 161),whitePiece.size,whitePiece.x,whitePiece.y)
+            newWhite.pos = whitePiece.pos
+            res.whitePieces.append(newWhite)
+            if newWhite.pos != (-1,-1):
+                res.placement_on_board[newWhite.pos[0]][newWhite.pos[1]].append(newWhite)
         for blackPiece in self.board.blackPieces:
-            res.blackPieces.append(blackPiece)
-        res.placement_on_board = [[list(stack) for stack in row] for row in self.board.placement_on_board]
+            newBlack = Black((112, 57, 127), blackPiece.size, blackPiece.x, blackPiece.y)
+            newBlack.pos = blackPiece.pos
+            res.blackPieces.append(newBlack)
+            if newBlack.pos != (-1,-1):
+                res.placement_on_board[newBlack.pos[0]][newBlack.pos[1]].append(newBlack)
+        
+                    
         return res
 
