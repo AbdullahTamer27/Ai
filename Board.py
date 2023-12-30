@@ -174,7 +174,15 @@ class Board:
                     
                 if countRow != 3 and countCol != 3 and countDiagonalR != 3 and countDiagonalL != 3:
                     return False
-            
+        
+        if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
+            self.placement_on_board[piece.pos[0]][piece.pos[1]].pop()
+            if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
+                try:
+                    self.placement_on_board[piece.pos[0]][piece.pos[1]][-1].isMovable = True
+                except IndexError as e:
+                    print("error in setting ", piece.idx)
+                    pass
         return True
 
         
@@ -289,31 +297,31 @@ class Board:
             
             
         if piece.pos == (-1,-1):
-            print("entered -1, -1 if")
+            #print("entered -1, -1 if")
             try:
                 if piece in self.firstW:
                     self.firstW.pop()
-                    print(self.firstW)
+                    #print(self.firstW)
                     self.firstW[-1].isMovable = True
                 elif piece in self.secondW:
                     self.secondW.pop()
-                    print(self.secondW)
+                    #print(self.secondW)
                     self.secondW[-1].isMovable = True
                 elif piece in self.thirdW:
                     self.thirdW.pop()
-                    print(self.thirdW)
+                   # print(self.thirdW)
                     self.thirdW[-1].isMovable = True
                 elif piece in self.firstB:
                     self.firstB.pop()
-                    print(self.firstB)
+                   # print(self.firstB)
                     self.firstB[-1].isMovable = True
                 elif piece in self.secondB:
                     self.secondB.pop()
-                    print(self.secondB)
+                    #print(self.secondB)
                     self.secondB[-1].isMovable = True
                 elif piece in self.thirdB:
                     self.thirdB.pop()
-                    print(self.thirdB)
+                    #print(self.thirdB)
                     self.thirdB[-1].isMovable = True
             except IndexError as e:
                 print("error", piece.idx)

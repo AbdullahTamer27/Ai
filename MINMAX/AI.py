@@ -4,6 +4,7 @@ class AI:
     def __init__(self, board):
         # self.placement_on_board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
         self.board = board
+        
     def all_moves(self, piece):
         #print(piece.idx, piece.size)
         
@@ -22,16 +23,17 @@ class AI:
             for row in move.placement_on_board:
                 print(row)
             print('.')
-        print('---------------------------------------------')
+        print('\n\n---------------------------------------------\n\n')
         return moves
     
     def temp(self, playerturn):
+        new_board = self.clone_board()
         if playerturn: 
-            for whitePiece in self.board.whitePieces:
+            for whitePiece in new_board.whitePieces:
                 if whitePiece.isMovable:
                     self.all_moves(whitePiece)
         elif not playerturn:
-            for blackPiece in self.board.blackPieces:
+            for blackPiece in new_board.blackPieces:
                 if blackPiece.isMovable:
                     self.all_moves(blackPiece)
 
@@ -47,9 +49,12 @@ class AI:
         # Determine if 'piece' can legally move to (row, col) on the current board.
         # Include logic for checking if the piece can gobble, move into an empty space, etc.
         onBoard_piece = self.board.placement_on_board[row][col]
+        
         if onBoard_piece:
+            if onBoard_piece[-1] == piece:
+                return True
             # OnBoard Piece is Big
-            if onBoard_piece[-1].size >= piece.size:
+            if onBoard_piece[-1].size >= piece.size and id(piece) != id(onBoard_piece[-1]):
                 return False
             # OnBoard Piece not big
             # Check illegal move: Eating from outside, and not 3 consequitive
@@ -90,7 +95,7 @@ class AI:
 
                 if countRow != 3 and countCol != 3 and countDiagonalR != 3 and countDiagonalL != 3:
                     return False
-
+        
         return True
 
     def clone_board(self):
@@ -101,12 +106,14 @@ class AI:
         for whitePiece in self.board.whitePieces:
             newWhite = White((253, 187, 161),whitePiece.size,whitePiece.x,whitePiece.y)
             newWhite.pos = whitePiece.pos
+            newWhite.isMovable = whitePiece.isMovable
             res.whitePieces.append(newWhite)
             if newWhite.pos != (-1,-1):
                 res.placement_on_board[newWhite.pos[0]][newWhite.pos[1]].append(newWhite)
         for blackPiece in self.board.blackPieces:
             newBlack = Black((112, 57, 127), blackPiece.size, blackPiece.x, blackPiece.y)
             newBlack.pos = blackPiece.pos
+            newBlack.isMovable = blackPiece.isMovable
             res.blackPieces.append(newBlack)
             if newBlack.pos != (-1,-1):
                 res.placement_on_board[newBlack.pos[0]][newBlack.pos[1]].append(newBlack)
