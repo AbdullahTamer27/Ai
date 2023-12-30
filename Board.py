@@ -4,6 +4,127 @@ class Board:
         #self.placement_on_board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
         self.placement_on_board = [[[],[],[],[]],[[],[],[],[]],[[],[],[],[]],[[],[],[],[]]]
 
+    # def valid_movies(self):
+    #     valid_movies = []
+    #     for row in self.placement_on_board:
+    #         for col in self.placement_on_board[row]:
+    #             if self.placement_on_board[row][col] == 0 :
+    #                 valid_movies.append(self.placement_on_board[row][col])
+    #     print(valid_movies)
+
+#
+    def evaluate (self , piece ):
+        White_score = 0
+        Black_score = 0
+        if isinstance(piece,White) :
+
+            countRow = 0
+            countCol = 0
+            countDiagonalL = 0
+            countDiagonalR = 0
+            # check legal row
+            for row in range (4):
+                for i in range(4):
+                    try:
+                        if type(self.placement_on_board[row][i][-1]) == type(piece):
+                            countRow += 1
+                    except IndexError as e:
+                        # Handle IndexError (list index out of range)
+                        pass
+                if countRow> White_score :
+                     White_score=countRow
+                countRow = 0
+
+            # check legal column
+            for col in range(4):
+                for i in range(4):
+                    try:
+                        if type(self.placement_on_board[i][col][-1]) == type(piece):
+                            countCol += 1
+                    except IndexError as e:
+                        pass
+                if countCol > White_score :
+                    White_score =countCol
+                countCol=0
+                # check legal diagonal left to right
+
+            for i in range(4):
+                try:
+                    if type(self.placement_on_board[i][i][-1]) == type(piece):
+                        countDiagonalL += 1
+                except IndexError as e:
+                    pass
+            if countDiagonalL > White_score:
+                White_score = countDiagonalL
+            countDiagonalL = 0
+                    # check legal diagonal right to left
+            for i in range(4):
+                try:
+                    if type(self.placement_on_board[i][3 - i][-1]) == type(piece):
+                        countDiagonalR += 1
+                except IndexError as e:
+                    pass
+            if countDiagonalR > White_score:
+                White_score = countDiagonalR
+            countDiagonalR = 0
+
+            print ("white -->", White_score)
+
+        elif isinstance(piece,Black) :
+
+            countRow = 0
+            countCol = 0
+            countDiagonalL = 0
+            countDiagonalR = 0
+            # check legal row
+            for row in range (4):
+                for i in range(4):
+                    try:
+                        if type(self.placement_on_board[row][i][-1]) == type(piece):
+                            countRow += 1
+                    except IndexError as e:
+                        # Handle IndexError (list index out of range)
+                        pass
+                if countRow> Black_score :
+                     Black_score = countRow
+                countRow = 0
+
+            # check legal column
+            for col in range(4):
+                for i in range(4):
+                    try:
+                        if type(self.placement_on_board[i][col][-1]) == type(piece):
+                            countCol += 1
+                    except IndexError as e:
+                        pass
+                if countCol > Black_score :
+                    Black_score =countCol
+                countCol=0
+                # check legal diagonal left to right
+
+            for i in range(4):
+                try:
+                    if type(self.placement_on_board[i][i][-1]) == type(piece):
+                        countDiagonalL += 1
+                except IndexError as e:
+                    pass
+            if countDiagonalL > Black_score:
+                Black_score = countDiagonalL
+            countDiagonalL = 0
+                    # check legal diagonal right to left
+            for i in range(4):
+                try:
+                    if type(self.placement_on_board[i][3 - i][-1]) == type(piece):
+                        countDiagonalR += 1
+                except IndexError as e:
+                    pass
+            if countDiagonalR > Black_score:
+                Black_score = countDiagonalR
+            countDiagonalR = 0
+
+            print("Black -->", Black_score)
+
+
     def updatePlacement(self, row, col, piece):
         # piece: going to play
         # Piece is going to eat another piece
@@ -51,7 +172,7 @@ class Board:
                     except IndexError as e:
                         pass
                     
-                if countRow != 3 or countCol != 3 and countDiagonalR != 3 and countDiagonalL != 3:
+                if countRow != 3 and countCol != 3 and countDiagonalR != 3 and countDiagonalL != 3:
                     print("Illegal Move: must be 3 in row or column or diagonal to eat from outside")
                     return False
                

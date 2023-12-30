@@ -4,6 +4,7 @@ from pieceGUI import Piece, White, Black
 from Board import Board
 # Game state variables
 # Constants for game states
+
 MENU = 0
 GAME = 1
 
@@ -118,6 +119,7 @@ while True:
                         if board.updatePlacement(row, col, selected_piece) == False:
                             selected_piece.rect.center = selected_piece.oldPosition
                             continue
+                        board.evaluate(selected_piece)
                         selected_piece.rect.center = coordinates_on_board[row][col]
                         selected_piece.setOldPosition(coordinates_on_board[row][col])
                         game_over,winner = board.checkWin()
@@ -193,5 +195,7 @@ while True:
                 pygame.quit()
                 exit()
 
+    # board.valid_movies()
     pygame.display.update()
+
     clock.tick(60)
