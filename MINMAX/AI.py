@@ -26,7 +26,7 @@ class AI:
         print('\n\n---------------------------------------------\n\n')
         return moves
     
-    def temp(self, playerturn):
+    def get_all_moves(self, playerturn):
         new_board = self.clone_board()
         if playerturn: 
             for whitePiece in new_board.whitePieces:
