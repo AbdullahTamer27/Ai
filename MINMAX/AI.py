@@ -28,15 +28,17 @@ class AI:
     
     def get_all_moves(self, playerturn):
         new_board = self.clone_board()
+        output = []
         if playerturn: 
             for whitePiece in new_board.whitePieces:
                 if whitePiece.isMovable:
-                     self.all_moves(whitePiece)
+                     output.append(self.all_moves(whitePiece))
 
         elif not playerturn:
             for blackPiece in new_board.blackPieces:
                 if blackPiece.isMovable:
-                     self.all_moves(blackPiece)
+                     output.append(self.all_moves(blackPiece))
+        return output
 
     def get_player_pieces(self, pieces):
         # Return a list of all pieces belonging to 'player' that can be moved.

@@ -1,3 +1,4 @@
+#trial
 def minimax(state, depth, player): 
     best = []
 
