@@ -1,5 +1,6 @@
 import pygame
 from Board import Board
+from MINMAX.AI import get_all_movies
 from pieceGUI import White, Black
 
 
@@ -27,7 +28,7 @@ def alphabeta (position, depth, max_player, alpha, beta):
                 best_move = move
         return alpha , best_move
 
- else:
+    else:
         best_move = None
 
         for move in get_all_movies(position, Black, ):

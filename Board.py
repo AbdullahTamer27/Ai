@@ -243,6 +243,12 @@ class Board:
     def reset_board(self):
         self.placement_on_board =  [[[], [], [], []], [[], [], [], []], [[], [], [], []], [[], [], [], []]]
 
+    def onTop(self, piece, row, col):
+        if(row,col) == (-1,-1) or (row,col) == (3,3) :
+            return True
+        onBoard_piece = self.placement_on_board[row][col]
+        return onBoard_piece and onBoard_piece[-1] is piece
+
 
     def updatePlacement(self, row, col, piece):
         # piece: going to play

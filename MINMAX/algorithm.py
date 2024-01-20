@@ -1,7 +1,7 @@
 import pygame
 from Board import Board
 from pieceGUI import White, Black
-
+from MINMAX.AI import get_all_movies
 
 
 def minimax (position, depth, max_player):
@@ -12,7 +12,7 @@ def minimax (position, depth, max_player):
         maxeval = float('-inf')
         best_move = None
 
-        for move in get_all_movies(position, White ):
+        for move in get_all_movies(position, True ):
             evaluation = minimax(move, depth - 1, False)
             maxeval = max(maxeval, evaluation)
             if maxeval == evaluation:
@@ -23,13 +23,10 @@ def minimax (position, depth, max_player):
         mineval = float('inf')
         best_move = None
 
-        for move in get_all_movies(position, Black, ):
+        for move in get_all_movies(position, False ):
             evaluation = minimax(move, depth - 1, True)
             mineval = min(mineval, evaluation)
             if mineval == evaluation:
                 best_move = move
         return mineval, best_move
 
-
-def get_all_movies(position):
-    pass

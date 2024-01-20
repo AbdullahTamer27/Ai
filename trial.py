@@ -122,12 +122,12 @@ while True:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1 and  Playerturn:  # Left mouse button and its player 1s turn
                 for piece in white_pieces:
-                    if piece.rect.collidepoint(event.pos):
+                    if piece.rect.collidepoint(event.pos)and board.onTop(piece, piece.pos[0], piece.pos[1]):
                         selected_piece = piece
                         dragging = True
             elif event.button == 1 and not Playerturn:
                 for piece in black_pieces:
-                    if piece.rect.collidepoint(event.pos):
+                    if piece.rect.collidepoint(event.pos) and board.onTop(piece, piece.pos[0], piece.pos[1]):
                         selected_piece = piece
                         dragging = True
 
@@ -238,6 +238,8 @@ while True:
                 all_pieces.empty()
                 reset_positions()
                 board.reset_board()
+                game_state = MENU
+                Playerturn = True
                 
         elif exit_button_rect.collidepoint(mouse_pos):
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:

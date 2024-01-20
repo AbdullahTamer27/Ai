@@ -31,11 +31,12 @@ class AI:
         if playerturn: 
             for whitePiece in new_board.whitePieces:
                 if whitePiece.isMovable:
-                    self.all_moves(whitePiece)
+                     self.all_moves(whitePiece)
+
         elif not playerturn:
             for blackPiece in new_board.blackPieces:
                 if blackPiece.isMovable:
-                    self.all_moves(blackPiece)
+                     self.all_moves(blackPiece)
 
     def get_player_pieces(self, pieces):
         # Return a list of all pieces belonging to 'player' that can be moved.

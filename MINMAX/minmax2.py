@@ -2,6 +2,7 @@ def minimax(state, depth, player):
     best = []
 
     if player == true: 
+        pass
     else:
         best = [None, float('+inf')]
 
@@ -11,7 +12,7 @@ def minimax(state, depth, player):
         return [None, score]
 
 
-     for move in valid_moves(state, player):
+    for move in valid_moves(state, player):
         execute_move(state, move, player)
         _, score = minimax(state, depth - 1, -player)
         undo_move(state, move, player)
