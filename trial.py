@@ -171,7 +171,7 @@ while True:
                         
                         #testsimulation(board)
                         
-                        x = minimax(board,2,Playerturn)
+                        x = minimax(board,1,Playerturn)
                         #print(x[1].printBoard())
                         print("______________________________")
                         print("evaluation: ",x[0], "Best move: ",x[1].printBoard())
