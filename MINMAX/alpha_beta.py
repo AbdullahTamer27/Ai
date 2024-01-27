@@ -29,7 +29,7 @@ def iterative_deepening_alphabeta(position, max_player, max_depth, time_limit):
 
         if move is not None:
             best_move = move
-            best_evaluation = position.evaluate()
+            best_evaluation = position.evaluate() # the value of desirability if max player the max value is returned , if min player the min value is returned
 
     return best_evaluation, best_move
 
