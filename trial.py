@@ -5,7 +5,32 @@ from MINMAX.AI import AI
 from pieceGUI import White, Black
 from Board import Board
 from MINMAX.algorithm import minimax, testsimulation, compare
+from MINMAX.alpha_beta import alphabeta, iterative_deepening_alphabeta
+# Game state variables
+# Constants for game states
 
+# def can_place_piece(board, row, col, piece):
+#     onBoard_piece = board.placement_on_board[row][col]
+#     if onBoard_piece[-1].size >= piece.size:
+#         print("onboard size: ", onBoard_piece[-1].size, "piece size: ", piece.size)
+#         print("Too small")
+#         return False
+#     return True
+#
+# def all_moves(board, piece):
+#     moves = []
+#     for row in range(len(board)):
+#         for col in range(len(board[row])):
+#             if can_place_piece(board, row, col, piece):
+#                 # Assuming you have a function to clone the board state
+#                 new_board = clone_board(board)
+#                 place_piece(new_board, row, col, piece)
+#                 moves.append(new_board)
+#             if can_gobble(board, row, col, piece):
+#                 # Consider all gobble moves
+#                 for new_board in generate_gobble_moves(board, row, col, piece):
+#                     moves.append(new_board)
+#     return moves
 MENU = 0
 GAME = 1
 
@@ -154,8 +179,24 @@ while True:
                         selected_piece.rect.center = coordinates_on_board[row][col]
                         selected_piece.setOldPosition(coordinates_on_board[row][col])
                         game_over,winner = board.checkWin()
-                        selected_piece = None
-                    
+                        
+                        #testsimulation(board)
+                        
+                        x = minimax(board,2,Playerturn)
+                        #print(x[1].printBoard())
+                        print("______________________________")
+                        print("evaluation: ",x[0], "Best move: ",x[1].printBoard())
+                        Playerturn = not Playerturn
+                        if not Playerturn:
+                            moved_piece, newpos = compare(board,x[1])
+                            if board.updatePlacement(newpos[0], newpos[1], moved_piece) == False:
+                                moved_piece.rect.center = moved_piece.oldPosition
+                                continue
+                            moved_piece.rect.center = coordinates_on_board[newpos[0]][newpos[1]]
+                            moved_piece.setOldPosition(coordinates_on_board[newpos[0]][newpos[1]])
+                            Playerturn = not Playerturn
+                        
+                        Ai.board = board
                         #Ai.get_all_moves(Playerturn)
                         # CALL MINIMAX  
                         #Ai.board = board
