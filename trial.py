@@ -1,34 +1,11 @@
+import time
 import pygame
 from sys import exit
 from MINMAX.AI import AI
 from pieceGUI import White, Black
 from Board import Board
 from MINMAX.algorithm import minimax, testsimulation, compare
-# Game state variables
-# Constants for game states
 
-# def can_place_piece(board, row, col, piece):
-#     onBoard_piece = board.placement_on_board[row][col]
-#     if onBoard_piece[-1].size >= piece.size:
-#         print("onboard size: ", onBoard_piece[-1].size, "piece size: ", piece.size)
-#         print("Too small")
-#         return False
-#     return True
-#
-# def all_moves(board, piece):
-#     moves = []
-#     for row in range(len(board)):
-#         for col in range(len(board[row])):
-#             if can_place_piece(board, row, col, piece):
-#                 # Assuming you have a function to clone the board state
-#                 new_board = clone_board(board)
-#                 place_piece(new_board, row, col, piece)
-#                 moves.append(new_board)
-#             if can_gobble(board, row, col, piece):
-#                 # Consider all gobble moves
-#                 for new_board in generate_gobble_moves(board, row, col, piece):
-#                     moves.append(new_board)
-#     return moves
 MENU = 0
 GAME = 1
 
@@ -50,11 +27,11 @@ color3 = (100,72,96)  # purple
 test_font = pygame.font.Font(None, 70)
 text_surface = test_font.render('Gobblet', False, (23, 2, 24))
 text_rec = text_surface.get_rect(center=(400, 100))
-
+button_font = pygame.font.Font(None, 36)
 
 new_game_button_rect = pygame.Rect(300, 400, 200, 50)
 exit_button_rect = pygame.Rect(300, 470, 200, 50)
-
+restart_button_rect = pygame.Rect(23, 23, 100, 50)
 
 piece_sizes = [20,40,60,80]
 
@@ -74,6 +51,10 @@ all_pieces = pygame.sprite.Group()
 board = Board()
 Ai = AI(board)
 def reset_positions():
+    global board 
+    global Ai
+    board = Board()
+    Ai = AI(board)
     x_initial_r = 700
     x_initial_l = 100
     y_initial = 200
@@ -113,8 +94,10 @@ old_position = None
 dragging = False
 Playerturn = True
 game_over = False
+
+
+
 while True:
-    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -141,7 +124,10 @@ while True:
                     game_state = GAME
                 elif event.key == pygame.K_3:
                     game_mode = "hard"
-                    game_state = GAME    
+                    game_state = GAME
+                elif event.key == pygame.K_4:
+                    game_mode = "CvC"
+                    game_state = GAME     
                 elif event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     exit()
@@ -168,24 +154,8 @@ while True:
                         selected_piece.rect.center = coordinates_on_board[row][col]
                         selected_piece.setOldPosition(coordinates_on_board[row][col])
                         game_over,winner = board.checkWin()
-                        
-                        #testsimulation(board)
-                        
-                        x = minimax(board,2,Playerturn)
-                        #print(x[1].printBoard())
-                        print("______________________________")
-                        print("evaluation: ",x[0], "Best move: ",x[1].printBoard())
-                        Playerturn = not Playerturn
-                        if not Playerturn:
-                            moved_piece, newpos = compare(board,x[1])
-                            if board.updatePlacement(newpos[0], newpos[1], moved_piece) == False:
-                                moved_piece.rect.center = moved_piece.oldPosition
-                                continue
-                            moved_piece.rect.center = coordinates_on_board[newpos[0]][newpos[1]]
-                            moved_piece.setOldPosition(coordinates_on_board[newpos[0]][newpos[1]])
-                            Playerturn = not Playerturn
-                        
-                        Ai.board = board
+                        selected_piece = None
+                    
                         #Ai.get_all_moves(Playerturn)
                         # CALL MINIMAX  
                         #Ai.board = board
@@ -193,17 +163,86 @@ while True:
                         #     print(piece.idx, piece.isMovable)
                         # print(".")
                         if(game_mode == 'PvP'):
+                            Playerturn = not Playerturn
                             continue
+
                         elif(game_mode == 'easy'):
-                            #Playerturn = not Playerturn
-                            continue
-                        elif(game_mode == 'hard'):
+                            x = minimax(board,2,Playerturn)
+
+                            game_over,winner = board.checkWin()
+                            if(game_over):
+                                break
+                            Playerturn = not Playerturn
+                            if not Playerturn:
+                                moved_piece, newpos = compare(board,x[1])
+                                if board.updatePlacement(newpos[0], newpos[1], moved_piece) == False:
+                                    moved_piece.rect.center = moved_piece.oldPosition
+                                    continue
+                                moved_piece.rect.center = coordinates_on_board[newpos[0]][newpos[1]]
+                                moved_piece.setOldPosition(coordinates_on_board[newpos[0]][newpos[1]])
+                                Playerturn = not Playerturn
+                                game_over,winner = board.checkWin()
+                                
+                                
                             
-                            continue
 
-                
+                        elif(game_mode == 'hard'):
+                            x = minimax(board,1,Playerturn)
+                            game_over,winner = board.checkWin()
+                            if(game_over):
+                                break
+                            Playerturn = not Playerturn
+                            if not Playerturn:
+                                moved_piece, newpos = compare(board,x[1])
+                                if board.updatePlacement(newpos[0], newpos[1], moved_piece) == False:
+                                    moved_piece.rect.center = moved_piece.oldPosition
+                                    continue
+                                moved_piece.rect.center = coordinates_on_board[newpos[0]][newpos[1]]
+                                moved_piece.setOldPosition(coordinates_on_board[newpos[0]][newpos[1]])
+                                Playerturn = not Playerturn
+                                game_over,winner = board.checkWin()
+
+                        elif(game_mode == 'CvC'):
+                            selected_piece = board.whitePieces[-1]
+                            if board.updatePlacement(0, 0, board.whitePieces[-1]) == False:
+                                selected_piece.rect.center = selected_piece.oldPosition
+                                continue
+                            x = minimax(board,1,Playerturn)
+
+                            game_over,winner = board.checkWin()
+                            if(game_over):
+                                break
+                            Playerturn = not Playerturn
+                            if not Playerturn:
+                                moved_piece, newpos = compare(board,x[1])
+                                if board.updatePlacement(newpos[0], newpos[1], moved_piece) == False:
+                                    moved_piece.rect.center = moved_piece.oldPosition
+                                    continue
+                                moved_piece.rect.center = coordinates_on_board[newpos[0]][newpos[1]]
+                                moved_piece.setOldPosition(coordinates_on_board[newpos[0]][newpos[1]])
+                                Playerturn = not Playerturn
+                                game_over,winner = board.checkWin()
+                            time.sleep(2)
+                            x = minimax(board,1,Playerturn)
+
+                            game_over,winner = board.checkWin()
+                            if(game_over):
+                                break
+                            Playerturn = not Playerturn
+                            if not Playerturn:
+                                moved_piece, newpos = compare(board,x[1])
+                                if board.updatePlacement(newpos[0], newpos[1], moved_piece) == False:
+                                    moved_piece.rect.center = moved_piece.oldPosition
+                                    continue
+                                moved_piece.rect.center = coordinates_on_board[newpos[0]][newpos[1]]
+                                moved_piece.setOldPosition(coordinates_on_board[newpos[0]][newpos[1]])
+                                Playerturn = not Playerturn
+                                game_over,winner = board.checkWin()
+
+                            
+
+
                 selected_piece = None
-
     if dragging and selected_piece:
         selected_piece.rect.center = pygame.mouse.get_pos()
 
@@ -219,6 +258,21 @@ while True:
     screen.blit(background, background_rec)
     all_pieces.draw(screen)
     screen.blit(text_surface, text_rec)
+    restart_text = button_font.render("Restart", True, (255, 255, 255))
+    pygame.draw.rect(screen, (53,27, 60), restart_button_rect) 
+    screen.blit(restart_text, (restart_button_rect.x + 10, restart_button_rect.y + 15))
+    
+    mouse_pos = pygame.mouse.get_pos()
+    if restart_button_rect.collidepoint(mouse_pos):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            # Start a new game when the new game button is clicked
+            game_over = False
+            all_pieces.empty()
+            reset_positions()
+            board.reset_board()
+            game_state = MENU
+            Playerturn = True
+
 
     if game_state == MENU:
         # Draw menu text
@@ -227,11 +281,13 @@ while True:
         menu_text1 = menu_font.render("press 1 - Player vs Player", True, (0, 0, 0))
         menu_text2 = menu_font.render("press 2 - Player vs AI(easy)", True, (0, 0, 0))
         menu_text3 = menu_font.render("press 3 - Player vs AI(Hard)", True, (0, 0, 0))
-        menu_text4 = menu_font.render("Press ESC to exit", True, (0, 0, 0))
+        menu_text4 = menu_font.render("press 4 - Computer vs Computer", True, (0, 0, 0))
+        menu_text5 = menu_font.render("Press ESC to exit", True, (0, 0, 0))
         screen.blit(menu_text1, (300, 300))
         screen.blit(menu_text2, (300, 340))
         screen.blit(menu_text3, (300, 380))
         screen.blit(menu_text4, (300, 420))
+        screen.blit(menu_text5, (300, 460))
 
 
 
@@ -246,15 +302,15 @@ while True:
         # Draw new game and exit buttons
         pygame.draw.rect(screen, (0, 255, 0), new_game_button_rect)  # Green button for new game
         pygame.draw.rect(screen, (255, 0, 0), exit_button_rect)  # Red button for exit
+        
 
         # Text on buttons
         button_font = pygame.font.Font(None, 36)
         new_game_text = button_font.render("New Game", True, (0, 0, 0))
         exit_text = button_font.render("Exit", True, (0, 0, 0))
-
+  
         screen.blit(new_game_text, (new_game_button_rect.x + 20, new_game_button_rect.y + 15))
         screen.blit(exit_text, (exit_button_rect.x + 80, exit_button_rect.y + 15))
-
         # Check for button clicks
         mouse_pos = pygame.mouse.get_pos()
         if new_game_button_rect.collidepoint(mouse_pos):
@@ -266,6 +322,7 @@ while True:
                 board.reset_board()
                 game_state = MENU
                 Playerturn = True
+
                 
         elif exit_button_rect.collidepoint(mouse_pos):
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
