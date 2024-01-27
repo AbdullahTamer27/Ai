@@ -4,6 +4,7 @@ from MINMAX.AI import AI
 from pieceGUI import White, Black
 from Board import Board
 from MINMAX.algorithm import minimax, testsimulation, compare
+from MINMAX.alpha_beta import alphabeta, iterative_deepening_alphabeta
 # Game state variables
 # Constants for game states
 
@@ -171,7 +172,12 @@ while True:
                         
                         #testsimulation(board)
                         
+                        #
+                        
+                        #
                         x = minimax(board,1,Playerturn)
+                        #x = alphabeta(board,1, Playerturn,float('-inf'), float('inf'))
+                        #x= iterative_deepening_alphabeta(board, Playerturn, 4, 10)
                         #print(x[1].printBoard())
                         print("______________________________")
                         print("evaluation: ",x[0], "Best move: ",x[1].printBoard())
