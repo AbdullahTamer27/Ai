@@ -171,6 +171,7 @@ while True:
                         
                         Playerturn = not Playerturn
                         AI.get_all_moves(Playerturn)
+                        
                         # for piece in all_pieces:
                         #     print(piece.idx, piece.isMovable)
                         # print(".")

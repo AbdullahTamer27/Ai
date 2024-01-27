@@ -244,7 +244,7 @@ class Board:
         self.placement_on_board =  [[[], [], [], []], [[], [], [], []], [[], [], [], []], [[], [], [], []]]
 
     def onTop(self, piece, row, col):
-        if(row,col) == (-1,-1) or (row,col) == (3,3) :
+        if(row,col) == (None,None) :
             return True
         onBoard_piece = self.placement_on_board[row][col]
         return onBoard_piece and onBoard_piece[-1] is piece
