@@ -3,7 +3,7 @@ from sys import exit
 from MINMAX.AI import AI
 from pieceGUI import White, Black
 from Board import Board
-from MINMAX.algorithm import minimax, testsimulation
+from MINMAX.algorithm import minimax, testsimulation, compare
 # Game state variables
 # Constants for game states
 
@@ -169,23 +169,33 @@ while True:
                         selected_piece.setOldPosition(coordinates_on_board[row][col])
                         game_over,winner = board.checkWin()
                         
-                        #x = minimax(board,2,Playerturn)
-                        testsimulation(board)
+                        #testsimulation(board)
+                        
+                        x = minimax(board,2,Playerturn)
                         #print(x[1].printBoard())
                         print("______________________________")
-                        #print("evaluation: ",x[0], "Best move: ",x[1].printBoard())
+                        print("evaluation: ",x[0], "Best move: ",x[1].printBoard())
                         Playerturn = not Playerturn
+                        if not Playerturn:
+                            moved_piece, newpos = compare(board,x[1])
+                            if board.updatePlacement(newpos[0], newpos[1], moved_piece) == False:
+                                moved_piece.rect.center = moved_piece.oldPosition
+                                continue
+                            moved_piece.rect.center = coordinates_on_board[newpos[0]][newpos[1]]
+                            moved_piece.setOldPosition(coordinates_on_board[newpos[0]][newpos[1]])
+                            Playerturn = not Playerturn
+                        
                         Ai.board = board
-                        Ai.get_all_moves(Playerturn)
+                        #Ai.get_all_moves(Playerturn)
                         # CALL MINIMAX  
-                        Ai.board = board
+                        #Ai.board = board
                         # for piece in all_pieces:
                         #     print(piece.idx, piece.isMovable)
                         # print(".")
                         if(game_mode == 'PvP'):
                             continue
                         elif(game_mode == 'easy'):
-                            Playerturn = not Playerturn
+                            #Playerturn = not Playerturn
                             continue
                         elif(game_mode == 'hard'):
                             

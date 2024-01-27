@@ -78,6 +78,30 @@ def testsimulation(board):
 def clone_simulated_board(board):
     return
 
+def compare(old_board, new_board):
+    new_pos= (-1,-1)
+    # for new_white in new_board.whitePieces:
+    #     for old_white in old_board.whitePieces:
+    #         if new_white.idx == old_white.idx:
+    #             if new_white.pos != old_white.pos:
+    #                 new_pos = new_white.pos
+    #                 if new_pos == (None, None):
+    #                     continue
+    #                 print("old_white id: ", old_white.idx, "new_pos: ", new_pos)
+    #                 if old_white is not None:
+    #                     return old_white, new_pos
+    for new_black in new_board.blackPieces:
+        for old_black in old_board.blackPieces:
+            if new_black.idx == old_black.idx:
+                if new_black.pos != old_black.pos:
+                    new_pos = new_black.pos
+                    if new_pos == (None, None):
+                        continue
+                    print("old_black id: ", old_black.idx, "new_pos: ", new_pos)
+                    if old_black is not None:
+                        if new_pos is not None:
+                            return old_black, new_pos
+    #return piece, pos
 
 def clone_board(board):
     res = Board()
