@@ -4,7 +4,7 @@ from sys import exit
 from MINMAX.AI import AI
 from pieceGUI import White, Black
 from Board import Board
-from MINMAX.algorithm import minimax, testsimulation, compare
+from MINMAX.algorithm import minimax, testsimulation, compare, compare_white
 from MINMAX.alpha_beta import alphabeta, iterative_deepening_alphabeta
 
 MENU = 0
@@ -168,8 +168,8 @@ while True:
                             continue
 
                         elif(game_mode == 'easy'):
-                            #x = minimax(board,2,Playerturn)
                             x = alphabeta(board,1, Playerturn,float('-inf'), float('inf'))
+                            #x = minimax(board,1,Playerturn)
                             game_over,winner = board.checkWin()
                             if(game_over):
                                 break
@@ -208,6 +208,8 @@ while True:
                             if board.updatePlacement(0, 0, board.whitePieces[-1]) == False:
                                 selected_piece.rect.center = selected_piece.oldPosition
                                 continue
+                            selected_piece.rect.center = coordinates_on_board[0][0]
+                            selected_piece.setOldPosition(coordinates_on_board[0][0])
                             x = minimax(board,1,Playerturn)
 
                             game_over,winner = board.checkWin()
@@ -231,7 +233,7 @@ while True:
                                 break
                             Playerturn = not Playerturn
                             if not Playerturn:
-                                moved_piece, newpos = compare(board,x[1])
+                                moved_piece, newpos = compare_white(board,x[1])
                                 if board.updatePlacement(newpos[0], newpos[1], moved_piece) == False:
                                     moved_piece.rect.center = moved_piece.oldPosition
                                     continue

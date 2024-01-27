@@ -102,7 +102,19 @@ def compare(old_board, new_board):
                         if new_pos is not None:
                             return old_black, new_pos
     #return piece, pos
-
+def compare_white(old_board, new_board):
+    new_pos= (-1,-1)
+    for new_white in new_board.whitePieces:
+        for old_white in old_board.whitePieces:
+            if new_white.idx == old_white.idx:
+                if new_white.pos != old_white.pos:
+                    new_pos = new_white.pos
+                    if new_pos == (None, None):
+                        continue
+                    print("old_white id: ", old_white.idx, "new_pos: ", new_pos)
+                    if old_white is not None:
+                        return old_white, new_pos
+    #return piece, pos
 def clone_board(board):
     res = Board()
 
@@ -228,3 +240,54 @@ def can_move(board, piece, row, col):
                 return False
     
     return True
+
+
+
+def minimax_easy (board, depth, max_player):
+    position = board
+    cloned = Board()
+    cloned = clone_board(board)
+    print(depth)
+    print("current board: ", board.printBoard())
+    #print("current clonedboard: ", cloned.printBoard())
+    if depth == 0: #check later or position.checkWin()
+        return position.evaluate_easy(max_player), position
+
+    if max_player:
+        maxeval = float('-inf')
+        best_move = None
+
+        for moves in get_all_moves(cloned, not max_player ): # TRUE = white
+            for move in moves:
+                #print("move in max: ", move.printBoard())
+                clonedmove = clone_board(move)
+                #print("clonedmove in max: ", clonedmove.printBoard())
+                #print("move in should be equal to move: ", Ai.board.printBoard())
+                (evaluation, x) = minimax(move, depth - 1, False)
+                #Ai.board = temp
+                maxeval = max(maxeval, evaluation)
+                # print("maxeval after min: ", maxeval)
+                print("max current board: ", move.printBoard())
+                if maxeval == evaluation:
+                    best_move = move
+        return maxeval , best_move
+
+    else:
+        mineval = float('inf')
+        best_move = None
+        
+        for moves in get_all_moves(cloned, not max_player ):
+            for move in moves:
+                #print("move in min: ", move.printBoard())
+                clonedmove = clone_board(move)
+                #print("clonedmove in min: ", clonedmove.printBoard())
+                #temp = Ai.board
+                (evaluation, x) = minimax(move, depth - 1, True)
+                #Ai.board = temp
+                #print("mineval: ", mineval, "evaluation: ", evaluation)
+                mineval = min(mineval, evaluation)
+                # print("mineval after min: ", mineval)
+                print("min current board: ", move.printBoard())
+                if mineval == evaluation:
+                    best_move = move
+        return mineval, best_move
