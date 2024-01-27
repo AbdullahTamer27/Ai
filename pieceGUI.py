@@ -10,8 +10,10 @@ class Piece(pygame.sprite.Sprite) :
         self.x = x
         self.y = y
         self.oldPosition = (x,y)
-        self.idx = Piece.id +1
+        self.idx = (Piece.id +1) % 24
         Piece.id = Piece.id +1
+        # if Piece.id == 24:
+        #     Piece.id = 0
         self.above = [] # list of Pieces above
         self.under = [] # list of Pieces under
         self.pos = (-1,-1) # Position of Piece on Board

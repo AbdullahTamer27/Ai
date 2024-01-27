@@ -19,11 +19,11 @@ class AI:
                     if test:
                         new_board.placement_on_board[row][col].append(piece)
                     moves.append(new_board)  # Add the new board state to moves list
-        for move in moves:
-            for row in move.placement_on_board:
-                print(row)
-            print('.')
-        print('\n\n---------------------------------------------\n\n')
+        # for move in moves:
+        #     for row in move.placement_on_board:
+        #         print(row)
+        #     print('.')
+        # print('\n\n---------------------------------------------\n\n')
         return moves
     
     def get_all_moves(self, playerturn):

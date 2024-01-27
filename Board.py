@@ -15,9 +15,13 @@ class Board:
 
 
 
-    def evaluate (self , piece ):
+    def evaluate (self , player ):
         White_score = 0
         Black_score = 0
+        if player:
+            piece = White((253, 187, 161), 3, 3, 3)
+        else:
+            piece = Black((112, 57, 127), 3, 3, 3)
         if isinstance(piece,White) :
 
             countRow = 0
@@ -70,7 +74,8 @@ class Board:
                 White_score = countDiagonalR
             countDiagonalR = 0
 
-            print ("white -->", White_score)
+          #  print ("white -->", White_score)
+            return White_score
 
         elif isinstance(piece,Black) :
 
@@ -124,7 +129,8 @@ class Board:
                 Black_score = countDiagonalR
             countDiagonalR = 0
 
-            print("Black -->", Black_score)
+           # print("Black -->", Black_score)
+            return Black_score
 
 
     def simulatePlacement(self, row, col, piece):
