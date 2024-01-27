@@ -15,9 +15,13 @@ class Board:
 
 
 
-    def evaluate (self , piece ):
+    def evaluate (self , player ):
         White_score = 0
         Black_score = 0
+        if player:
+            piece = White((253, 187, 161), 3, 3, 3)
+        else:
+            piece = Black((112, 57, 127), 3, 3, 3)
         if isinstance(piece,White) :
 
             countRow = 0
@@ -70,7 +74,8 @@ class Board:
                 White_score = countDiagonalR
             countDiagonalR = 0
 
-            print ("white -->", White_score)
+          #  print ("white -->", White_score)
+            return White_score
 
         elif isinstance(piece,Black) :
 
@@ -124,7 +129,8 @@ class Board:
                 Black_score = countDiagonalR
             countDiagonalR = 0
 
-            print("Black -->", Black_score)
+           # print("Black -->", Black_score)
+            return Black_score
 
 
     def simulatePlacement(self, row, col, piece):
@@ -137,7 +143,7 @@ class Board:
                 return False
             # OnBoard Piece not big
             # Check illegal move: Eating from outside, and not 3 consequitive
-            elif piece.pos == (-1,-1): # piece from outside
+            elif piece.pos == (None,None): # piece from outside
                 countRow = 0 
                 countCol = 0
                 countDiagonalL = 0
@@ -174,15 +180,16 @@ class Board:
                     
                 if countRow != 3 and countCol != 3 and countDiagonalR != 3 and countDiagonalL != 3:
                     return False
-        
-        if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
-            self.placement_on_board[piece.pos[0]][piece.pos[1]].pop()
+       
+        if piece.pos != (None,None):
             if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
-                try:
-                    self.placement_on_board[piece.pos[0]][piece.pos[1]][-1].isMovable = True
-                except IndexError as e:
-                    print("error in setting ", piece.idx)
-                    pass
+                self.placement_on_board[piece.pos[0]][piece.pos[1]].pop()
+                if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
+                    try:
+                        self.placement_on_board[piece.pos[0]][piece.pos[1]][-1].isMovable = True
+                    except IndexError as e:
+                        print("error in setting ", piece.idx)
+                        pass
         return True
 
         
@@ -244,7 +251,7 @@ class Board:
         self.placement_on_board =  [[[], [], [], []], [[], [], [], []], [[], [], [], []], [[], [], [], []]]
 
     def onTop(self, piece, row, col):
-        if(row,col) == (None,None) :
+        if(row,col) == (None,None) or (row,col) == (3,3) :
             return True
         onBoard_piece = self.placement_on_board[row][col]
         return onBoard_piece and onBoard_piece[-1] is piece
@@ -262,7 +269,7 @@ class Board:
                 return False
             # OnBoard Piece not big
             # Check illegal move: Eating from outside, and not 3 consequitive
-            elif piece.pos == (-1,-1): # piece from outside
+            elif piece.pos == (None,None): # piece from outside
                 countRow = 0 
                 countCol = 0
                 countDiagonalL = 0
@@ -302,7 +309,7 @@ class Board:
                     return False
             
             
-        if piece.pos == (-1,-1):
+        if piece.pos == (None,None):
             #print("entered -1, -1 if")
             try:
                 if piece in self.firstW:
@@ -334,14 +341,15 @@ class Board:
                 pass
         
         # Remove Piece from stackk
-        if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
-            self.placement_on_board[piece.pos[0]][piece.pos[1]].pop()
+        if piece.pos  != (None,None):
             if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
-                try:
-                    self.placement_on_board[piece.pos[0]][piece.pos[1]][-1].isMovable = True
-                except IndexError as e:
-                    print("error in setting ", piece.idx)
-                    pass
+                self.placement_on_board[piece.pos[0]][piece.pos[1]].pop()
+                if self.placement_on_board[piece.pos[0]][piece.pos[1]]:
+                    try:
+                        self.placement_on_board[piece.pos[0]][piece.pos[1]][-1].isMovable = True
+                    except IndexError as e:
+                        print("error in setting ", piece.idx)
+                        pass
         
         # Add Piece to stack
         try:

@@ -19,11 +19,11 @@ class AI:
                     if test:
                         new_board.placement_on_board[row][col].append(piece)
                     moves.append(new_board)  # Add the new board state to moves list
-        for move in moves:
-            for row in move.placement_on_board:
-                print(row)
-            print('.')
-        print('\n\n---------------------------------------------\n\n')
+        # for move in moves:
+        #     for row in move.placement_on_board:
+        #         print(row)
+        #     print('.')
+        # print('\n\n---------------------------------------------\n\n')
         return moves
     
     def get_all_moves(self, playerturn):
@@ -61,7 +61,7 @@ class AI:
                 return False
             # OnBoard Piece not big
             # Check illegal move: Eating from outside, and not 3 consequitive
-            elif piece.pos == (-1, -1):  # piece from outside
+            elif piece.pos == (None, None):  # piece from outside
                 countRow = 0
                 countCol = 0
                 countDiagonalL = 0
@@ -111,14 +111,14 @@ class AI:
             newWhite.pos = whitePiece.pos
             newWhite.isMovable = whitePiece.isMovable
             res.whitePieces.append(newWhite)
-            if newWhite.pos != (-1,-1):
+            if newWhite.pos != (None,None):
                 res.placement_on_board[newWhite.pos[0]][newWhite.pos[1]].append(newWhite)
         for blackPiece in self.board.blackPieces:
             newBlack = Black((112, 57, 127), blackPiece.size, blackPiece.x, blackPiece.y)
             newBlack.pos = blackPiece.pos
             newBlack.isMovable = blackPiece.isMovable
             res.blackPieces.append(newBlack)
-            if newBlack.pos != (-1,-1):
+            if newBlack.pos != (None,None):
                 res.placement_on_board[newBlack.pos[0]][newBlack.pos[1]].append(newBlack)
         
                     
